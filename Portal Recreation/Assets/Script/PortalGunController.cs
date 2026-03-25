@@ -4,54 +4,45 @@ using UnityEngine;
 
 public class PortalGunController : MonoBehaviour
 {
-    public GameObject portalPrefab, portalPrefab1;
     public Transform portalHolder, shootPoint, cameraTransform;
+    public PortalCamera portalCamera;
     
-    int _portalPlaneLayer = 9;
+    private static readonly Quaternion halfTurn = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+    private static readonly int portalPlaneLayer = 9;
     public (bool, bool) activePortals = (false, false);
 
-    [SerializeField] private (PortalBehavior, PortalBehavior) _portals;
+    public PortalBehavior[] portals;
     [SerializeField] private float maxPortalDistance;
     [SerializeField] private LayerMask portalLayerMask;
     [SerializeField] private Material defaultMaterial;
-    [SerializeField] private Material[] portalMaterials;
+    [SerializeField] private Material portalMaterial;
 
     private PortalBehavior GetPortalBehavior(bool index)
     {
-        return ((index) ? _portals.Item1 : _portals.Item2);
+        return ((index) ? portals[0] : portals[1]);
     }
 
-    private void Start()
+    private void Awake()
     {
         SetupPortals();
     }
 
     private void SetupPortals()
     {
-        _portals.Item1 = Instantiate(portalPrefab, portalHolder).GetComponent<PortalBehavior>();
-        _portals.Item2 = Instantiate(portalPrefab1, portalHolder).GetComponent<PortalBehavior>();
+        portals[0].otherPortal = portals[1];
+        portals[1].otherPortal = portals[0];
 
-        _portals.Item1.otherPortal = _portals.Item2;
-        _portals.Item2.otherPortal = _portals.Item1;
+        portals[0].index = false;
+        portals[1].index = true;
 
-        _portals.Item1.myCamera.transform.parent = null;
-        _portals.Item1.myCamera.playerCamera = cameraTransform;
-        _portals.Item1.myCamera.portal = _portals.Item1.transform;
-        _portals.Item1.myCamera.otherPortal = _portals.Item2.transform;
+        portals[0].gunController = this;
+        portals[1].gunController = this;
 
-        _portals.Item2.myCamera.transform.parent = null;
-        _portals.Item2.myCamera.playerCamera = cameraTransform;
-        _portals.Item2.myCamera.portal = _portals.Item2.transform;
-        _portals.Item2.myCamera.otherPortal = _portals.Item1.transform;
+        portals[0].gameObject.SetActive(false);
+        portals[1].gameObject.SetActive(false);
 
-        _portals.Item1.index = false;
-        _portals.Item2.index = true;
-
-        _portals.Item1.gunController = this;
-        _portals.Item2.gunController = this;
-
-        _portals.Item1.gameObject.SetActive(false);
-        _portals.Item2.gameObject.SetActive(false);
+        portalCamera.portalGunController = this;
+        portalCamera.mainCamera = Camera.main;
     }
 
     private void Update()
@@ -74,13 +65,13 @@ public class PortalGunController : MonoBehaviour
             return activePortals.Item2;
     }
 
-    public void TeleportFrom(PortalBehavior newPortal, GameObject obj)
+    public void TeleportFrom(PortalBehavior fromPortal, PortalBehavior newPortal, GameObject obj)
     {
-        Transform newPortalTransform = newPortal.transform;
-        Transform trans = obj.transform;
-
+        Transform inTransform = fromPortal.renderPlane.transform;
+        Transform outTransform = newPortal.renderPlane.transform;
+        
         // make it so that the new portal doesn't instantly teleport them back
-        newPortal.IgnoreTPList.Add(obj);
+        newPortal.IgnoreTPList.Add(obj.gameObject);
 
         // disable the character controller if necessary
         if (obj.TryGetComponent<CharacterController>(out var cc))
@@ -88,11 +79,25 @@ public class PortalGunController : MonoBehaviour
             cc.enabled = false;
         }
 
-        // move player to new one
-        trans.position = newPortalTransform.position;
+        // Update position of object.
+        //Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
+        //relativePos = halfTurn * relativePos;
+        //obj.transform.position = outTransform.TransformPoint(relativePos);
+        obj.transform.position = outTransform.position;
 
-        // align to new normal
-        trans.forward = newPortalTransform.forward;
+        // Update rotation of object.
+        Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
+        relativeRot = halfTurn * relativeRot;
+        obj.transform.rotation = outTransform.rotation * relativeRot;
+
+        // Update velocity of rigidbody.
+        if (obj.TryGetComponent<Rigidbody>(out Rigidbody rb))
+        {
+            Vector3 relativeVel = inTransform.InverseTransformDirection(rb.linearVelocity);
+            relativeVel = halfTurn * relativeVel;
+            rb.linearVelocity = outTransform.TransformDirection(relativeVel);
+        }
+
 
         if (cc != null)
         {
@@ -105,9 +110,8 @@ public class PortalGunController : MonoBehaviour
             // stop colliding with walls (default layer)
             objCollider.excludeLayers |= (1 << 0);
             // collide with the portal plane
-            objCollider.includeLayers |= (1 << _portalPlaneLayer);
+            objCollider.includeLayers |= (1 << portalPlaneLayer);
         }
-
     }
 
     private void ShootPortal(bool index)
@@ -119,6 +123,7 @@ public class PortalGunController : MonoBehaviour
         {
             // move portal to the new location
             thePortal.SetActive(true);
+            beh.IsPlaced = true;
 
             thePortal.transform.position = hit.point;
 
@@ -134,7 +139,8 @@ public class PortalGunController : MonoBehaviour
             if (DoesOtherPortalExist(index))
             {
                 // set material to camera material
-                beh.renderPlane.material = portalMaterials[index ? 1 : 0];
+                beh.renderPlane.material = portalMaterial;
+                portalCamera.UpdatePortalTexture();
             }
             else
             {

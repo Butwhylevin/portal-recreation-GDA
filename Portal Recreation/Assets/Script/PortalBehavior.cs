@@ -9,8 +9,11 @@ public class PortalBehavior : MonoBehaviour
     public PortalBehavior otherPortal;
     public PortalCamera myCamera;
 
+    public Transform perspectiveTransform;
+
     public MeshRenderer renderPlane;
     public bool index;
+    public bool IsPlaced = false;
     public Vector3 portalExtents;
     private Vector3 _colSize;
 
@@ -33,7 +36,7 @@ public class PortalBehavior : MonoBehaviour
         if (IgnoreTPList.Contains(other.gameObject))
             return;
 
-        gunController.TeleportFrom(otherPortal, other.gameObject);
+        gunController.TeleportFrom(this, otherPortal, other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)
@@ -59,7 +62,7 @@ public class PortalBehavior : MonoBehaviour
             
             IgnoreTPList.Remove(other.gameObject);
 
-            gunController.TeleportFrom(otherPortal, other.gameObject);
+            gunController.TeleportFrom(this, otherPortal, other.gameObject);
         }
     }
 }

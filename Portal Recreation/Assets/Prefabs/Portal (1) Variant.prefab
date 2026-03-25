@@ -15,7 +15,7 @@ PrefabInstance:
     - target: {fileID: 1134953163672614858, guid: ced52eed443b39c4e81b97dd17920d01, type: 3}
       propertyPath: m_TargetTexture
       value: 
-      objectReference: {fileID: 8400000, guid: 75d211c19ea460141951efa780d967b9, type: 2}
+      objectReference: {fileID: 8400000, guid: bf05852026c7ffb43bae377ba4fac10f, type: 2}
     - target: {fileID: 6111842896848914926, guid: ced52eed443b39c4e81b97dd17920d01, type: 3}
       propertyPath: m_Name
       value: Portal (1) Variant
@@ -60,8 +60,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8224091714115916056, guid: ced52eed443b39c4e81b97dd17920d01, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8224091714115916056, guid: ced52eed443b39c4e81b97dd17920d01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8985765926038038637, guid: ced52eed443b39c4e81b97dd17920d01, type: 3}
+      propertyPath: myCamera
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1134953163672614856, guid: ced52eed443b39c4e81b97dd17920d01, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ced52eed443b39c4e81b97dd17920d01, type: 3}
