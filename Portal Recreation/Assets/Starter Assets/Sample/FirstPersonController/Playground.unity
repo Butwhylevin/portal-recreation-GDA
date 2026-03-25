@@ -813,7 +813,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2038858359}
   - component: {fileID: 2038858360}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: Portal Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -848,6 +848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   portalPrefab: {fileID: 6111842896848914926, guid: ced52eed443b39c4e81b97dd17920d01, type: 3}
+  portalPrefab1: {fileID: 2190685018678785685, guid: 351fe6299be5af344a9f5309185c77d4, type: 3}
   portalHolder: {fileID: 1102640130}
   shootPoint: {fileID: 2038858359}
   cameraTransform: {fileID: 8338988565591873055}
@@ -855,6 +856,10 @@ MonoBehaviour:
   portalLayerMask:
     serializedVersion: 2
     m_Bits: 1
+  defaultMaterial: {fileID: 2100000, guid: 6b911390c5825014e8377183a7837d3f, type: 2}
+  portalMaterials:
+  - {fileID: 2100000, guid: b4bfe3f040951c64c996db3963d969a3, type: 2}
+  - {fileID: 2100000, guid: 6110cccab44a17d47a5b40d1fae8a8c4, type: 2}
 --- !u!1001 &2084445384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1154,6 +1159,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1823859423}
     m_Modifications:
+    - target: {fileID: 4135013735270702863, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694023377611215440, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393215578589016640, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393215578589016640, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393215578589016642, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393215578589016642, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: MoveSpeed
       value: 5
@@ -1165,6 +1194,18 @@ PrefabInstance:
     - target: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: m_Name
       value: PlayerCapsule
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228382, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228382, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 8997996947095583982, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: m_RootOrder
